@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rank_percentage">%d%%</string>
+    <string name="rank_play_times">플레이 %d회</string>
+</resources>
