@@ -1,9 +1,13 @@
 package com.yapp.bol.data.remote
 
+import com.yapp.bol.data.model.base.BaseResponse
+import com.yapp.bol.data.model.group.JoinGroupApiRequest
+import com.yapp.bol.data.model.group.request.CheckGroupJonByAccessCodeRequest
 import com.yapp.bol.data.model.group.response.ProfileUploadResponse
 import com.yapp.bol.data.model.group.response.GameApiResponse
 import com.yapp.bol.data.model.group.response.MemberValidApiResponse
 import com.yapp.bol.data.model.group.request.NewGroupApiRequest
+import com.yapp.bol.data.model.group.response.CheckGroupJoinByAccessCodeResponse
 import com.yapp.bol.data.model.group.response.NewGroupApiResponse
 import com.yapp.bol.data.model.group.response.GroupSearchApiResponse
 import okhttp3.MultipartBody
@@ -24,6 +28,12 @@ interface GroupApi {
     suspend fun postOAuthApi(
         @Body newGroupApiRequest: NewGroupApiRequest,
     ): Response<NewGroupApiResponse>
+
+    @POST("v1/group/{groupId}/accessCode")
+    suspend fun checkGroupJoinAccessCode(
+        @Path("groupId") groupId: String,
+        @Body accessCode: CheckGroupJonByAccessCodeRequest,
+    ): Response<CheckGroupJoinByAccessCodeResponse>
 
     @Multipart
     @POST("v1/file")
@@ -50,4 +60,10 @@ interface GroupApi {
         @Query("pageNumber") page: String,
         @Query("pageSize") pageSize: String,
     ): Response<GroupSearchApiResponse>
+
+    @POST("v1/group/{groupId}/host")
+    suspend fun joinGroup(
+        @Path("groupId") groupId: String,
+        @Body request: JoinGroupApiRequest,
+    ): Response<BaseResponse>
 }

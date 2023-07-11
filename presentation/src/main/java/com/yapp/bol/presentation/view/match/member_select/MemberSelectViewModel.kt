@@ -46,7 +46,6 @@ class MemberSelectViewModel @Inject constructor(
                 checkedApiResult(
                     apiResult = it,
                     success = { data -> _isNickNameValidate.value = data },
-                    error = { throwable -> throw throwable }
                 )
             }
         }

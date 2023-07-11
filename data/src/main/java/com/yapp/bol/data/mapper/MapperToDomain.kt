@@ -1,5 +1,7 @@
 package com.yapp.bol.data.mapper
 
+import com.yapp.bol.data.model.base.BaseResponse
+import com.yapp.bol.data.model.group.response.CheckGroupJoinByAccessCodeResponse
 import com.yapp.bol.data.model.group.response.GroupSearchApiResponse
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.GroupItem
@@ -10,13 +12,15 @@ import com.yapp.bol.data.model.group.response.GameApiResponse
 import com.yapp.bol.data.model.group.response.GameResponse
 import com.yapp.bol.data.model.group.response.MemberValidApiResponse
 import com.yapp.bol.data.model.group.response.NewGroupApiResponse
+import com.yapp.bol.domain.model.BaseItem
+import com.yapp.bol.domain.model.CheckGroupJoinByAccessCodeItem
 import com.yapp.bol.domain.model.GameItem
 import com.yapp.bol.domain.model.LoginItem
 import com.yapp.bol.domain.model.NewGroupItem
 
 internal object MapperToDomain {
 
-    fun LoginResponse?.toDomain(): LoginItem? = this?.toItem()
+    fun LoginResponse?.mapperToBaseItem(): LoginItem? = this?.toItem()
 
     private fun LoginResponse.toItem(): LoginItem {
         return LoginItem(
@@ -31,8 +35,9 @@ internal object MapperToDomain {
                 GroupSearchItem(
                     hasNext = this.data.hasNext,
                     groupItemList = data.toItem(),
-                )
+                ),
             )
+
             is ApiResult.Error -> ApiResult.Error(exception)
         }
     }
@@ -45,7 +50,7 @@ internal object MapperToDomain {
                 description = groupItem.description,
                 organization = groupItem.organization,
                 profileImageUrl = groupItem.profileImageUrl,
-                memberCount = groupItem.memberCount
+                memberCount = groupItem.memberCount,
             )
         }
     }
@@ -58,7 +63,7 @@ internal object MapperToDomain {
             this.owner,
             this.organization,
             this.profileImageUrl,
-            this.accessCode
+            this.accessCode,
         )
     }
 
@@ -96,6 +101,20 @@ internal object MapperToDomain {
     fun ApiResult<MemberValidApiResponse>.validToDomain(): ApiResult<Boolean> {
         return when (this) {
             is ApiResult.Success -> ApiResult.Success(data.isAvailable)
+            is ApiResult.Error -> ApiResult.Error(exception)
+        }
+    }
+
+    fun ApiResult<BaseResponse>.mapperToBaseItem(): ApiResult<BaseItem> {
+        return when (this) {
+            is ApiResult.Success -> ApiResult.Success(BaseItem(data.code, data.message))
+            is ApiResult.Error -> ApiResult.Error(exception)
+        }
+    }
+
+    fun ApiResult<CheckGroupJoinByAccessCodeResponse>.mapperToCheckGroupJoinByAccessCodeItem(): ApiResult<CheckGroupJoinByAccessCodeItem> {
+        return when (this) {
+            is ApiResult.Success -> ApiResult.Success(CheckGroupJoinByAccessCodeItem(data.isNewMember))
             is ApiResult.Error -> ApiResult.Error(exception)
         }
     }
